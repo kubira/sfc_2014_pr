@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/gui/panel/form/InitialPopulationForm.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/gui/ToolBar.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/population/ChromosomePopulation.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/crossover/ChromosomeCrossover.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/BinaryChromosome.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/Main.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/util/Variables.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/StringChromosome.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/population/BinaryChromosomePopulation.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/gui/MenuBar.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/DoubleChromosome.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/PermutationChromosome.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/gui/panel/form/CheckEndConditionForm.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/IntegerChromosome.java</file>
+            <file>file:/D:/FIT/SFC/Projekt/ga/src/cz/vutbr/fit/xkubis03/sfc/ga/chromosome/Chromosome.java</file>
+        </group>
+    </open-files>
+</project-private>

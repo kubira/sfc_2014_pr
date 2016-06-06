@@ -1,0 +1,255 @@
+\documentclass[12pt,a4paper,titlepage,final]{article}
+
+% cestina a fonty
+\usepackage[czech]{babel}
+\usepackage[latin2]{inputenc}
+% balicky pro odkazy
+\usepackage[bookmarksopen,colorlinks,plainpages=false,urlcolor=blue,unicode]{hyperref}
+
+\usepackage{url}
+% obrazky
+\usepackage[dvipdf]{graphicx}
+% velikost stranky
+\usepackage[top=3.5cm, left=2.5cm, text={17cm, 24cm}, ignorefoot]{geometry}
+
+\usepackage{multirow}
+\usepackage{pstricks,color}
+\usepackage{float}
+\restylefloat{table,figure}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% titulní strana
+
+% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\def\authorA{Bc. Radim Kubi¹, \url{xkubis03@stud.fit.vutbr.cz}}
+\def\projname{Java (Aplikace) \\ Demonstrace jednotlivých krokù GA}
+% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+\input{title.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% obsah
+\pagestyle{plain}
+\pagenumbering{roman}
+\setcounter{page}{1}
+%\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% textova zprava
+\newpage
+\pagestyle{plain}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Úvod}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Aplikace pro demonstraci jednotlivých krokù genetického algoritmu je napsána
+v~jazyku Java a~má grafické u¾ivatelské rozhraní. Pou¾ívá knihovnu u¾ivatelských
+prvkù \textit{Swing}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Reprezentace chromozomu}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chromozomy jsou v~programu reprezentovány jako seznamy (\texttt{ArrayList})
+jejich jednotlivých slo¾ek/genù. Pro ka¾dý typ chromozomu existuje zvlá¹tní
+tøída, která uchovává i~jeho dal¹í atributy (napø. hodnotu fitness). Lze vyu¾ít
+5~typù chromozomù:
+
+\begin{itemize}
+  \item binární (\texttt{BinaryChromosome}),
+  \item celoèíselný (\texttt{IntegerChromosome}),
+  \item reálných èísel (\texttt{DoubleChromosome}),
+  \item øetìzcový (\texttt{StringChromosome}),
+  \item permutaèní (\texttt{PermutationChromosome}).
+\end{itemize}
+
+Populace chromozomù mají vlastní tøídy obsahující seznam (\texttt{ArrayList})
+jedincù, velikost a~typ chromozomù. Ka¾dá populaèní tøída umo¾òuje
+pseudonáhodnì generovat slo¾ení chromozomù rùzné délky.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Ohodnocení populace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Typy chromozomù uvedené vý¹e doká¾e program ohodnotit minimálnì jednou fitness
+funkcí. Pro binární chromozomy to jsou \textit{OneMax}, \textit{ZeroMax}
+a~binární reprezentace celého kladného èísla (poèet správnì umístìných nul
+a~jednièek na jednotlivých pozicích chromozomu). Celoèíselné chromozomy
+a~chromozomy s~reálnými èísly lze hodnotit na základì neklesající, resp.
+nerostoucí posloupnosti jejich jednotlivých slo¾ek. Chromozom øetìzcový,
+obsahující posloupnost u¾ivatelem zadaných øetìzcù, se hodnotí pouze pomocí
+poètu v~nìm obsa¾eného konkrétního øetìzce. U permutaèního chromozomu je nutné
+zadat oèekávaný výsledek, z~nìho¾ se zji¹»uje poèet správnì umístìných genù.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Ukonèovací podmínka}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Podmínkou pro ukonèení genetického algoritmu je buï nalezení správného øe¹ení,
+nebo dosa¾ení maximálního zadaného poètu iterací jeho cyklu, kdy¾ dosud nebylo
+správné øe¹ení nalezeno.
+
+Program demonstruje postupnì prùbìh jednotlivých krokù jednoho cyklu algoritmu
+a~neumo¾òuje pokraèovat dále pouze pokud je nalezeno správné øe¹ení. Ukonèení
+po dosa¾ení maximálního nastaveného poètu iterací se pou¾ívá ve funkèním
+pøíkladu \textit{OneMax} problému.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Výbìr rodièù z~populace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Existuje nìkolik zpùsobù, jak vybrat z~populace mno¾inu jedincù, kteøí se stanou
+rodièi nových chromozomù. V programu jsou implementovány ètyøi:
+
+\begin{itemize} 
+  \item ruleta,
+  \item pravdìpodobnostní turnaj,
+  \item výbìr elity,
+  \item turnaj.
+\end{itemize}
+
+U~vìt¹iny z~nich je nutné provést pøepoèet fitness hodnoty podle proporce, nebo
+podle poøadí jedincù v~populaci. Kvalitnìj¹í jedinci potom mají pøi výbìru vìt¹í
+pravdìpodobnost stát se rodièi. Program umo¾òuje volbu parametrù, které
+ovlivòují tento výbìr (napø. poèet vybíraných rodièù, selektivní tlak).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Tvorba potomkù (rekombinace)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Potomci vzniknou provádìním rùzných operací nad dvìma rodièi. Mo¾nosti pou¾ití
+jednotlivých druhù rekombinace jsou závislé na reprezentaci chromozomu. Pøehled
+mo¾ností rekombinace pro jednotlivé typy chromozomù v~programu:
+
+\begin{itemize}
+  \item \textbf{binární:} jednobodové, vícebodové, uniformní,
+  \item \textbf{celoèíselné:} jednobodové, vícebodové, uniformní,
+  \item \textbf{reálné:} jednobodové, vícebodové, uniformní, aritmetické,
+  heuristické,
+  \item \textbf{øetìzcové:} jednobodové, vícebodové, uniformní,
+  \item \textbf{permutaèní:} indexová tabulka, PMX.
+\end{itemize}
+
+Opìt mají metody rekombinace mo¾nosti nastavení nìkolika parametrù, jedná se
+pøedev¹ím o~volbu pevného/náhodného místa rekombinace, poèet míst rekombinace
+apod.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Mutace potomkù}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Mutace spoèívá v~provedení umìlých zmìn náhodnì vybraného genu náhodnì vybraného
+jedince. Hlavní parametr, který ovlivòuje mutaci, je její pravdìpodobnost.
+Program umo¾òuje nastavit rozsah pravdìpodobnosti od 0 do 100\,\% s~krokem 0,1.
+Men¹í krok bohu¾el ne¹lo v~grafické komponentì \texttt{JSpinner} nastavit.
+
+V¹ech pìt typù chromozomu lze zmutovat. V~pøípadì binárního chromozomu se neguje
+hodnota na urèité jedné pozici. Celoèíselný chromozom mutuje zámìnou jednoho
+genu za jeho jinou alelu. U chromozomu s~reálnými èísly se k~nìkterému z~jeho
+genù pøiète, resp. odeète velmi malá hodnota (maximálnì 10\,\% pùvodní hodnoty).
+Øetìzcový chromozom také mutuje zámìnou genu za jinou alelu. Pro mutaci
+permutaèního chromozomu je potøeba zvolit dvì pozice, na kterých dojde
+k~prohození genù.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Tvorba nové populace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Po rekombinaci a~mutaci se provede výbìr jedincù do nové populace. Lze vybírat
+z~pùvodní populace a~zároveò i~z~mno¾iny potomkù. Nová populace mù¾e opìt
+vznikat mnoha zpùsoby, nìkteré se podobají zpùsobùm výbìru rodièù. U¾ivatel má
+na výbìr tyto:
+
+\begin{itemize}
+  \item \textbf{generaèní:} úplná náhrada pùvodní populace potomky,
+  \item \textbf{inkrementální:} nejhor¹í jedinec pùvodní populace je nahrazen
+  nejlep¹ím potomkem,
+  \item \textbf{úplná náhrada:} stejná jako generaèní,
+  \item \textbf{uniformní náhrada:} potomci nahradí náhodnì vybrané jedince
+  pùvodní populace,
+  \item \textbf{elitní náhrada:} celá mno¾ina potomkù nahradí stejnì velkou
+  mno¾inu nejhor¹ích jedincù pùvodní populace,
+  \item \textbf{turnajová náhrada:} z~náhodnì vybraného rodièe a~náhodnì
+  vybraného potomka se do nové populace zaèlení ten s~vy¹¹í fitness.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Spu¹tìní programu}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Ve slo¾ce \texttt{app} je binární \texttt{JAR} soubor, který se pøi správnì
+nastaveném systému spustí poklikáním. Pokud se nespustí tímto zpùsobem, lze
+program spustit z~pøíkazové øádky: \\
+\centerline{\texttt{java -jar <název souboru>.jar}}
+nebo otevøít projekt v~\textit{NetBeans IDE}.
+
+Funkènost byla ovìøena na studentském serveru \texttt{merlin} a~na poèítaèích
+v~CVT (Windows i~Linux).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Ovládání programu}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Aplikace rozdìluje cyklus genetického algoritmu na 8 jeho krokù:
+
+\begin{enumerate}
+  \item Tvorba poèáteèní populace.
+  \item \label{evaluate} Ohodnocení populace.
+  \item Kontrola ukonèovací podmínky.
+  \item Výbìr rodièù.
+  \item Rekombinace (tvorba potomkù).
+  \item Mutace potomkù.
+  \item Tvorba nové populace.
+  \item Skok na dal¹í iteraci (bod \ref{evaluate}).
+\end{enumerate}
+
+Zaèíná se tvorbou poèáteèní populace, která je k~dispozici stále. Ostatní
+kroky jsou dostupné pouze po provedení krokù pøedchozích. Lze se v¹ak libovolnì
+vysoko vrátit k~jakémukoliv jinému kroku a~po jeho zopakování (napø. s~jinými
+parametry) pokraèovat opìt smìrem dolù.
+
+Dokud není stisknuto tlaèítko ,,Dal¹í iterace'', pracuje program stále s~pùvodní
+populací jedincù. A¾ pøi pou¾ití tohoto tlaèítka se provede náhrada pùvodní
+(pøedchozí) populace novì vygenerovanou za pou¾ití potomkù.
+
+\textit{Funkèní pøíklad OneMax} je demonstrací øe¹ení OneMax problému, kdy je
+po¾adováno dosáhnutí binárního chromozomu obsahujícího pouze bity v~hodnotì 1.
+U¾ivatel mù¾e nastavovat v¹echny dostupné a~potøebné parametry, díky kterým
+zjistí, jak moc ovlivòují nalezení ¾ádoucího øe¹ení.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{img/gui.eps}
+  \caption{Grafické u¾ivatelské rozhraní aplikace.}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Pou¾ité softwarové prostøedky}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+  \item NetBeans IDE 8.0.2
+  \item Java SE 1.8.0\_25
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Pou¾ité informaèní zdroje}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+  \item Pøedná¹kové materiály pøedmìtù BIN, EVO, SFC
+  \item Návody, rady a~dokumentace na internetu
+\end{itemize}
+
+%=============================================================================
+
+% pøílohy
+\appendix
+\end{document}
